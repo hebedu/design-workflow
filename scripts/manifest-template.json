@@ -1,0 +1,88 @@
+{
+  "_comment": "项目状态追踪文件。所有 AI（CC/Codex/Cursor/网页版）共享读写。",
+  "project": "PROJECT_NAME",
+  "created": "YYYY-MM-DD",
+  "version": "v4.5",
+  "current_role": null,
+  "outputs": {
+    "01-research": {
+      "status": "pending",
+      "file": null,
+      "by": null,
+      "updated_at": null
+    },
+    "02-prd": {
+      "status": "pending",
+      "file": null,
+      "by": null,
+      "updated_at": null
+    },
+    "03-interaction": {
+      "status": "pending",
+      "file": null,
+      "by": null,
+      "updated_at": null
+    },
+    "04-style-options": {
+      "status": "pending",
+      "file": null,
+      "html_files": [],
+      "by": null,
+      "updated_at": null,
+      "note": "阶段 1 风格探索，输出 MD + 3 个静态 HTML"
+    },
+    "04-prototype-hifi": {
+      "status": "pending",
+      "file": null,
+      "html_file": null,
+      "selected_style": null,
+      "tech_stack": null,
+      "by": null,
+      "updated_at": null,
+      "note": "阶段 2 高保真，输出 MD + 完整交互单文件 HTML"
+    },
+    "04-frontend-package": {
+      "status": "pending",
+      "path": null,
+      "tech_stack": null,
+      "by": null,
+      "updated_at": null,
+      "note": "阶段 3 前端工程包，输出到 frontend/ 子目录。准入条件：阶段 2 完成 + 05 评审通过 + 04 的 🔴 问题已解决"
+    },
+    "05-review": {
+      "status": "pending",
+      "file": null,
+      "by": null,
+      "updated_at": null
+    },
+    "uat-checklist": {
+      "status": "pending",
+      "file": null,
+      "by": null,
+      "updated_at": null,
+      "note": "上线走查清单（场景 A1）"
+    },
+    "uat-report": {
+      "status": "pending",
+      "file": null,
+      "by": null,
+      "updated_at": null,
+      "note": "上线走查报告（场景 A2）"
+    },
+    "launch-ops": {
+      "status": "n/a",
+      "file": null,
+      "by": null,
+      "updated_at": null,
+      "note": "07 Launch Ops 上线运营助手（可选）。仅在需求需要对外传播 / 用户教育 / 增长 / 案例包装时由用户显式触发 /dw-launch。不在主链路 current_role 推进路径上。"
+    }
+  },
+  "status_legend": {
+    "pending": "未开始",
+    "in_progress": "进行中",
+    "done": "已完成",
+    "skeleton": "骨架版（场景 S）",
+    "needs_revision": "需要回炉（评审后）",
+    "n/a": "不适用（可选角色未启用）"
+  }
+}

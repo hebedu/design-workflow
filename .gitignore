@@ -1,0 +1,12 @@
+# OS
+.DS_Store
+
+# 不忽略 workspace（需要通过 git 共享给 Codex）
+# workspace/
+
+# 如果你不想把产出推到 GitHub（纯本地使用），取消下面这行的注释：
+# workspace/
+
+# 临时文件
+*.zip
+*.tmp

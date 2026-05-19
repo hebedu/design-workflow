@@ -1,0 +1,54 @@
+# Design Workflow · Cursor Rules
+
+This project uses the **design-workflow** framework — a multi-role AI design collaboration system.
+
+## How to use in Cursor
+
+Cursor doesn't support slash commands like Claude Code, but you can:
+
+1. Read `CLAUDE.md` in the root for full rules (this file is a brief mirror)
+2. When user asks for a role, read the corresponding script in `workflow/roles/`
+3. Save outputs to `workspace/<current-project>/`
+4. Update `manifest.json` after each output
+
+## Quick reference
+
+| User intent | What to do |
+|-------------|------------|
+| "Start new project" | Run `bash scripts/init.sh "<name>"`, then load `workflow/roles/01-researcher.md` |
+| "Write PRD" | Load `workflow/roles/02-pm.md`, do PART 0 health check + PART 0.5 ops sanity-check + growth hooks |
+| "Design interaction" | Load `workflow/roles/03-interaction.md` |
+| "Explore visual styles" | Load `workflow/roles/04-prototype-visual.md`, scenario A1, output 3 static HTML previews |
+| "Make hi-fi prototype" | Load `workflow/roles/04-prototype-visual.md`, scenario A2, output full interactive HTML (first screen must reflect 02 growth-hooks if present) |
+| "Review" | Load `workflow/roles/05-reviewer.md`, wear all 4 hats + soft-prompt whether to launch 07 |
+| "UAT checklist" | Load `workflow/roles/06-uat-walker.md`, scenario A1 |
+| "UAT report" | Load `workflow/roles/06-uat-walker.md`, scenario A2 |
+| "Launch ops / promotion / marketing copy" | Load `workflow/roles/07-launch-ops.md` (OPTIONAL, only if user explicitly asks OR after 05 soft-prompt) |
+
+## Rules you MUST follow
+
+1. **Read the role script in full** before working — don't rely on memory
+2. **Do PART 0 health check** for roles 02/03/04/06 — if 🛑, stop and report
+3. **Save outputs only to `workspace/<current-project>/`** — never elsewhere
+4. **Update `manifest.json`** after each role completes:
+   - `outputs.<role>.status` = `"done"`
+   - `outputs.<role>.file` = filename
+   - `outputs.<role>.by` = `"cursor"`
+   - `outputs.<role>.updated_at` = ISO 8601 timestamp
+5. **Stay in role boundaries** — don't do another role's work
+6. **Follow handoff-contract.md** — file header + body + handoff footer
+
+## Tech stack defaults (for role 04)
+
+- Stage 1 (style preview): native HTML + CSS, no JS
+- Stage 2 (hi-fi): Tailwind CDN + native JS (single file, no build needed)
+- Other options: React+Tailwind, Vue+Tailwind, shadcn/ui+Next.js
+
+Ask user to specify before generating.
+
+## Full documentation
+
+- `CLAUDE.md` — full rules
+- `workflow/README.md` — user-facing usage guide
+- `workflow/00-workflow.md` — detailed flow
+- `workflow/handoff-contract.md` — output format spec
