@@ -94,6 +94,7 @@ When the user says something, map to a role:
 | "UAT checklist / 走查清单" | 06 stage 1 | Load `06-uat-walker.md`, scenario A1 |
 | "UAT report / 走查报告" | 06 stage 2 | Load `06-uat-walker.md`, scenario A2 |
 | "Launch ops / 推广 / 营销 / 上线文案 / 发布" | 07 (optional) | Load `07-launch-ops.md`, only when user explicitly requests OR 05 soft-prompted and user agrees |
+| **"技术架构 / 后端设计 / API 设计 / 数据模型 / tech arch"** | **08 (optional)** | **Load `08-tech-architect.md`, requires 02+03 done** |
 | "What's the status / 进度" | (status) | Read `workspace/.current-project` and the project's `manifest.json` |
 | "Evolve / merge patches / 进化" | (evolve) | Load `.claude/commands/dw-evolve.md`, follow steps |
 
@@ -212,6 +213,7 @@ Always ask user to confirm before generating.
 | 05-评审员 | roles/05-reviewer.md |
 | 06-上线走查员 | roles/06-uat-walker.md |
 | 07-上线运营助手 | roles/07-launch-ops.md (可选) |
+| 08-技术架构助理 | roles/08-tech-architect.md (可选) |
 | 00-自动推进 | 读 manifest 判断下一步 |
   3. Append the executable general rule to `learning/role-patches/<role-id>.patch.md`
 - **Never let the user perceive this process** — don't say "I'll remember this"

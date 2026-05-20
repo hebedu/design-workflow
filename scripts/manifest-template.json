@@ -2,7 +2,7 @@
   "_comment": "项目状态追踪文件。所有 AI（CC/Codex/Cursor/网页版）共享读写。",
   "project": "PROJECT_NAME",
   "created": "YYYY-MM-DD",
-  "version": "v4.7",
+  "version": "v4.8",
   "current_role": null,
   "outputs": {
     "01-research": {
@@ -75,6 +75,13 @@
       "by": null,
       "updated_at": null,
       "note": "07 Launch Ops 上线运营助手（可选）。仅在需求需要对外传播 / 用户教育 / 增长 / 案例包装时由用户显式触发 /dw-launch。不在主链路 current_role 推进路径上。"
+    },
+    "tech-architecture": {
+      "status": "n/a",
+      "file": null,
+      "by": null,
+      "updated_at": null,
+      "note": "08 技术架构助理（可选）。项目需要真正开发时由用户触发 /dw-arch。是 04 阶段 3 前端工程包的前置条件（如需真实 API 对接）。"
     }
   },
   "status_legend": {

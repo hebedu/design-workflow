@@ -256,7 +256,8 @@ design-workflow/                    ← iCloud 顶层目录
 │       ├── 04-prototype-visual.md  ← 原型视觉助理（三阶段合并）
 │       ├── 05-reviewer.md           ← 含 07 启用软提示
 │       ├── 06-uat-walker.md         ← 上线走查员（线上质量循环）
-│       └── 07-launch-ops.md         ← 上线运营助手（可选支线，/dw-launch 触发）
+│       ├── 07-launch-ops.md         ← 上线运营助手（可选支线，/dw-launch 触发）
+│       └── 08-tech-architect.md    ← 技术架构助理（可选支线，/dw-arch 触发）
 ├── workspace/                       ← 每个项目的产出物
 │   └── [日期]-[项目名]/
 │       ├── 01-research.md
@@ -272,6 +273,7 @@ design-workflow/                    ← iCloud 顶层目录
 │       ├── uat-checklist.md        ← 上线走查清单（角色 6 阶段 1）
 │       ├── uat-report.md           ← 上线走查报告（角色 6 阶段 2）
 │       └── launch-ops.md           ← 上线运营方案（角色 7 可选）
+│       └── tech-architecture.md   ← 技术架构方案（角色 8 可选）
 └── draft/                           ← 历史版本归档
     ├── pre-merge-04-05/             ← 原 04 原型 + 05 UI 设计师（合并前备份）
     ├── legacy-root/                 ← 5/11 旧版（根目录搬过来）
