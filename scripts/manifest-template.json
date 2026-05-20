@@ -2,7 +2,7 @@
   "_comment": "项目状态追踪文件。所有 AI（CC/Codex/Cursor/网页版）共享读写。",
   "project": "PROJECT_NAME",
   "created": "YYYY-MM-DD",
-  "version": "v4.5",
+  "version": "v4.7",
   "current_role": null,
   "outputs": {
     "01-research": {

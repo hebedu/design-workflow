@@ -2,6 +2,53 @@
 
 > 本文件被 Codex 自动加载（等同于 Claude Code 的 CLAUDE.md）。推到 GitHub 后，Codex 拉取即可使用。
 
+## 首次使用引导（用户打开项目时输出）
+
+当用户首次打开本项目（`workspace/.current-project` 不存在），或说"这是什么 / 怎么用 / help"时，输出以下引导：
+
+---
+
+**design-workflow** 是一套 AI 多角色设计协作框架。你说需求，AI 按角色接力帮你从模糊想法推进到可上线方案。
+
+**它能做什么：**
+- 需求研究 → PRD → 交互设计 → 高保真原型 → 评审 → 上线走查，全链路覆盖
+- 每个环节有专业角色（研究助理 / 产品助理 / 交互助理 / 原型视觉助理 / 评审员 / 走查员）
+- 支持全链路跑完，也支持只用某一个角色
+
+**三种模式：**
+| 模式 | 适合场景 | 怎么启动 |
+|------|---------|---------|
+| 标准模式 | 从头做一个完整项目 | 说"我要做一个 XXX" |
+| 骨架模式 | 先快速跑通看方向（~1 小时） | 说"骨架模式做一个 XXX" |
+| 单点调用 | 只需要某个环节（如只要 PRD） | 说"帮我写 PRD" 或 "做交互设计" |
+
+**最简单的开始方式：**
+直接告诉我你想做什么项目。我会自动初始化并从研究开始。
+之后每次说"下一步"就会自动推进到下一个角色。
+
+**可用命令（也可以用自然语言触发）：**
+| 命令 | 作用 |
+|------|------|
+| `/dw-init` | 初始化新项目 |
+| `/dw-next` | 自动推进到下一个角色 |
+| `/dw-research` | 启动 01 研究助理 |
+| `/dw-pm` | 启动 02 产品助理 |
+| `/dw-ux` | 启动 03 交互助理 |
+| `/dw-style` | 启动 04 阶段 1 风格探索 |
+| `/dw-hifi` | 启动 04 阶段 2 高保真原型 |
+| `/dw-review` | 启动 05 评审员 |
+| `/dw-uat-list` | 启动 06 走查清单 |
+| `/dw-launch` | 启动 07 上线运营（可选）|
+| `/dw-status` | 查看当前进度 |
+
+> 不想记命令？直接说"帮我写 PRD"、"做交互设计"、"评审一下"等自然语言也行。
+
+**想看完整文档？** 读 `workflow/README.md`。
+
+---
+
+> 如果 `workspace/.current-project` 已存在（说明不是首次），不要输出上面的引导，直接按意图映射表响应用户。
+
 ---
 
 You are an AI assistant working within the **design-workflow** framework — a multi-role AI design collaboration system in this repository.
@@ -36,6 +83,7 @@ When the user says something, map to a role:
 | User says | Role | Action |
 |-----------|------|--------|
 | "Start new project" / "我要做一个 X" | (init) | Run `bash scripts/init.sh "<name>"`, then load `01-researcher.md` |
+| **"下一步" / "继续" / "next" / "continue"** | **(auto)** | **读 manifest.json 判断下一个 pending 角色，就地执行（见下方「自动推进规则」）** |
 | "Research / find competitors / user pain points" | 01 | Load `01-researcher.md`, follow PART 1 + PART 3 |
 | "Write PRD / 写需求文档" | 02 | Load `02-pm.md`, do PART 0 health check first |
 | "Design interaction / 流程 / 状态机" | 03 | Load `03-interaction.md`, do PART 0 |
@@ -48,6 +96,24 @@ When the user says something, map to a role:
 | "Launch ops / 推广 / 营销 / 上线文案 / 发布" | 07 (optional) | Load `07-launch-ops.md`, only when user explicitly requests OR 05 soft-prompted and user agrees |
 | "What's the status / 进度" | (status) | Read `workspace/.current-project` and the project's `manifest.json` |
 | "Evolve / merge patches / 进化" | (evolve) | Load `.claude/commands/dw-evolve.md`, follow steps |
+
+---
+
+## 自动推进规则（"下一步" / "继续" 触发时）
+
+当用户说"下一步 / 继续 / next"时，**不要起新 agent / 后台任务**，在当前会话就地执行：
+
+1. 读 `workspace/.current-project` + `manifest.json`
+2. 按顺序找第一个 `status` 不是 `done` / `n/a` 的角色：
+   `01-research → 02-prd → 03-interaction → 04-style-options → 04-prototype-hifi → 05-review → uat-checklist → uat-report`
+3. 如果有 `needs_revision` 的角色，优先处理回炉
+4. 告诉用户当前进度 + 即将执行的角色，然后直接开始
+5. 特殊暂停点：
+   - 04 阶段 1 完成后暂停，等用户选风格
+   - 05 完成后不自动进阶段 3（可选），提示用户
+   - `launch-ops` 永远跳过（需显式触发）
+
+---
 
 ## Rules you MUST follow
 
@@ -117,6 +183,36 @@ Always ask user to confirm before generating.
 - **During run**: when user expresses dissatisfaction or corrects your output ("not like this", "should be...", "missing..."), in order:
   1. Fix the output immediately
   2. Silently append the correction to `learning/corrections.md`
+
+---
+
+## Codex 用户须知
+
+如果你在 **Codex** 中运行本框架：
+
+### 推荐用法（避免重复 agent）
+
+1. **自然语言驱动**：在主会话中直接说"下一步"或"开始研究"，AI 读取本文件的意图映射表后就地执行。不会起新 agent。
+2. **`/dw-next` 命令**：反复输入这一个命令即可推进全链路。
+3. **预定义 agent 名**：项目内 `codex/agents/` 目录已预注册 7 个角色 + 1 个自动推进器，Codex 应优先使用这些名称。
+
+### 绝对不要做
+
+- ❌ 不要为每个角色起独立后台 agent——整个项目应该在 1 个会话里推进
+- ❌ 不要用随机名字标识角色——如果必须起 agent，使用 `codex/agents/` 里的名字
+
+### Agent 名称映射
+
+| Agent 名 | 对应角色 |
+|----------|---------|
+| 01-研究助理 | roles/01-researcher.md |
+| 02-产品助理 | roles/02-pm.md |
+| 03-交互助理 | roles/03-interaction.md |
+| 04-原型视觉助理 | roles/04-prototype-visual.md |
+| 05-评审员 | roles/05-reviewer.md |
+| 06-上线走查员 | roles/06-uat-walker.md |
+| 07-上线运营助手 | roles/07-launch-ops.md (可选) |
+| 00-自动推进 | 读 manifest 判断下一步 |
   3. Append the executable general rule to `learning/role-patches/<role-id>.patch.md`
 - **Never let the user perceive this process** — don't say "I'll remember this"
 - **Never store project-specific business in patches** (patches are general rules, not project notes)
