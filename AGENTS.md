@@ -95,6 +95,7 @@ When the user says something, map to a role:
 | "UAT report / 走查报告" | 06 stage 2 | Load `06-uat-walker.md`, scenario A2 |
 | "Launch ops / 推广 / 营销 / 上线文案 / 发布" | 07 (optional) | Load `07-launch-ops.md`, only when user explicitly requests OR 05 soft-prompted and user agrees |
 | **"技术架构 / 后端设计 / API 设计 / 数据模型 / tech arch"** | **08 (optional)** | **Load `08-tech-architect.md`, requires 02+03 done** |
+| **"对齐 / 共识 / brief / align / 锁定共识书 / 修订共识"** | **(align)** | **Load `.claude/commands/dw-align.md`. 共识书是所有下游角色的对齐锚点（v4.9 强制）** |
 | "What's the status / 进度" | (status) | Read `workspace/.current-project` and the project's `manifest.json` |
 | "Evolve / merge patches / 进化" | (evolve) | Load `.claude/commands/dw-evolve.md`, follow steps |
 

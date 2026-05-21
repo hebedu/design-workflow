@@ -14,14 +14,21 @@ description: 自动推进到下一个角色（读 manifest 判断，就地执行
 
 2. **读取 manifest.json**，按顺序找第一个 `status != "done"` 且 `status != "n/a"` 的角色：
    ```
-   01-research → 02-prd → 03-interaction → 04-style-options → 04-prototype-hifi → 05-review → uat-checklist → uat-report
+   shared-brief → 01-research → 02-prd → 03-interaction → 04-style-options → 04-prototype-hifi → 05-review → uat-checklist → uat-report
    ```
 
 3. **特殊处理**：
+   - **01 完成后强制 gate**（v4.9 起）：如果 `01-research.status=done` 但 `shared-brief.status != done`，**必须停下**，告诉用户：
+     ```
+     ✅ 01 研究完成。
+     ⏸ 共识书还未锁定。请确认 01 输出的 §7 共识书草稿，输入 /dw-align 锁定。
+     共识书锁定前，下游角色（02 PM 等）不能开始。
+     ```
+     不要继续推进到 02。
    - 有 `needs_revision` 的角色 → 优先回炉它
    - `04-style-options` done + `04-prototype-hifi` pending → 先问用户选了哪个风格
    - `05-review` done → 不自动进阶段 3，提示可选 `/dw-package`
-   - `launch-ops` 永远跳过（需显式 `/dw-launch`）
+   - `launch-ops` / `tech-architecture` 永远跳过（需显式触发）
    - 全部 done → 输出完成提示 + 可选操作列表
 
 4. **告诉用户进度 + 开始执行**：

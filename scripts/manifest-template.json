@@ -2,9 +2,18 @@
   "_comment": "项目状态追踪文件。所有 AI（CC/Codex/Cursor/网页版）共享读写。",
   "project": "PROJECT_NAME",
   "created": "YYYY-MM-DD",
-  "version": "v4.8",
+  "version": "v4.9",
   "current_role": null,
   "outputs": {
+    "shared-brief": {
+      "status": "pending",
+      "file": null,
+      "by": null,
+      "updated_at": null,
+      "current_version": null,
+      "history": [],
+      "note": "项目共识书（v4.9 起必经）。01 生成草稿后必须经用户拍板锁定（status=done），下游所有角色才能开始。任何角色提议修订都需要用户再次确认，版本号 +1。"
+    },
     "01-research": {
       "status": "pending",
       "file": null,
