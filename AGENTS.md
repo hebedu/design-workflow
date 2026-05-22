@@ -4,46 +4,25 @@
 
 ## 首次使用引导（用户打开项目时输出）
 
-当用户首次打开本项目（`workspace/.current-project` 不存在），或说"这是什么 / 怎么用 / help"时，输出以下引导：
+当用户首次打开本项目（`workspace/.current-project` 不存在），或说"这是什么 / 怎么用 / help / 介绍一下"时，输出以下引导：
 
 ---
 
-**design-workflow** 是一套 AI 多角色设计协作框架。你说需求，AI 按角色接力帮你从模糊想法推进到可上线方案。
+好了，design-workflow 准备好了。
 
-**它能做什么：**
-- 需求研究 → PRD → 交互设计 → 高保真原型 → 评审 → 上线走查，全链路覆盖
-- 每个环节有专业角色（研究助理 / 产品助理 / 交互助理 / 原型视觉助理 / 评审员 / 走查员）
-- 支持全链路跑完，也支持只用某一个角色
+这是一套 AI 多角色设计协作框架，帮你把一个模糊想法推进到可上线的产品方案。
 
-**三种模式：**
-| 模式 | 适合场景 | 怎么启动 |
-|------|---------|---------|
-| 标准模式 | 从头做一个完整项目 | 说"我要做一个 XXX" |
-| 骨架模式 | 先快速跑通看方向（~1 小时） | 说"骨架模式做一个 XXX" |
-| 单点调用 | 只需要某个环节（如只要 PRD） | 说"帮我写 PRD" 或 "做交互设计" |
+**直接跟我说话就行，比如：**
 
-**最简单的开始方式：**
-直接告诉我你想做什么项目。我会自动初始化并从研究开始。
-之后每次说"下一步"就会自动推进到下一个角色。
+💡 "我想做一个任务管理工具"
+📋 "帮我分析一下这个需求靠不靠谱"
+🔄 "继续上次的项目"
+❓ "给我讲讲这套流程怎么用"
+📊 "现在做到哪一步了？"
 
-**可用命令（也可以用自然语言触发）：**
-| 命令 | 作用 |
-|------|------|
-| `/dw-init` | 初始化新项目 |
-| `/dw-next` | 自动推进到下一个角色 |
-| `/dw-research` | 启动 01 研究助理 |
-| `/dw-pm` | 启动 02 产品助理 |
-| `/dw-ux` | 启动 03 交互助理 |
-| `/dw-style` | 启动 04 阶段 1 风格探索 |
-| `/dw-hifi` | 启动 04 阶段 2 高保真原型 |
-| `/dw-review` | 启动 05 评审员 |
-| `/dw-uat-list` | 启动 06 走查清单 |
-| `/dw-launch` | 启动 07 上线运营（可选）|
-| `/dw-status` | 查看当前进度 |
+我会自动识别你的意图，调用对应的 AI 角色（研究 / 产品 / 交互 / 视觉 / 评审 / 走查等）帮你推进。
 
-> 不想记命令？直接说"帮我写 PRD"、"做交互设计"、"评审一下"等自然语言也行。
-
-**想看完整文档？** 读 `workflow/README.md`。
+**不需要记命令，想到什么说什么。**
 
 ---
 
@@ -76,27 +55,80 @@ design-workflow/
 └── scripts/init.sh        # Initialize new project
 ```
 
+## 通用意图路由规则（Universal Intent Router）
+
+用户可以用任意方式触发角色，不需要记标准命令。
+
+### 4 种触发模式
+
+```
+模式 1：斜杠前缀    /交互  /研究  /产品  /评审  /03
+模式 2：@提及       @交互助理  @研究  @03
+模式 3：角色名+动作  交互看下  研究助理分析  产品助理写PRD
+模式 4：纯动作      帮我研究  写PRD  出原型  评审一下
+```
+
+### 角色关键词映射
+
+| 角色 | 斜杠/@ 关键词 | 自然语言关键词 | 数字 |
+|------|-------------|-------------|------|
+| 01 研究 | `/研究` `/research` `/01` `@研究` | 研究 / 分析需求 / 竞品 / 用户痛点 / 靠不靠谱 | `01` |
+| 02 产品 | `/产品` `/prd` `/pm` `/02` `@产品` | 产品 / PRD / 需求文档 / 功能清单 / 优先级 | `02` |
+| 03 交互 | `/交互` `/ux` `/03` `@交互` | 交互 / 流程 / 状态机 / 交互设计 / 画流程 | `03` |
+| 04 原型 | `/原型` `/视觉` `/design` `/04` `@原型` | 原型 / 视觉 / 高保真 / 风格 / 出图 | `04` |
+| 05 评审 | `/评审` `/review` `/05` `@评审` | 评审 / 检查 / 审一下 | `05` |
+| 06 走查 | `/走查` `/uat` `/06` `@走查` | 走查 / 上线检查 / 测试清单 / 验收 | `06` |
+| 07 运营 | `/运营` `/launch` `/07` `@运营` | 运营 / 推广 / 发布文案 / 营销 | `07` |
+| 08 架构 | `/架构` `/tech` `/08` `@架构` | 架构 / 技术方案 / API / 数据库 / 后端 | `08` |
+
+### 解析规则（优先级从高到低）
+
+1. **精确匹配斜杠/@ 前缀** → 直接调用对应角色
+2. **角色名出现在句子里** → 调用该角色（"交互看下" → 03）
+3. **动作关键词推断** → 从产出反推角色（"写PRD" → 02，"出原型" → 04）
+4. **数字简写** → 直接映射（"03" → 03）
+
+### 特殊规则
+
+**"看下" / "帮我看" / "检查" 的处理**：
+- 有角色名 → 调用该角色（"交互看下" → 03）
+- **无角色名 → 调用 05 评审员，5 顶帽子全开（全员一起看）**
+
+**"骨架" / "快速" / "先跑通"**：
+- 在任何角色触发词前加这些词 → 用场景 S 骨架模式执行
+- 例："骨架版研究" → 01 场景 S
+
+**"继续" / "下一步"**：
+- 不管前面有没有角色名，都触发自动推进逻辑（读 manifest 判断下一步）
+
+**歧义处理**：
+- 关键词匹配到多个角色 → 列出候选，让用户选
+- 完全无法识别 → 输出意图映射表
+
+---
+
 ## How to identify the user's intent
 
 When the user says something, map to a role:
 
 | User says | Role | Action |
 |-----------|------|--------|
-| "Start new project" / "我要做一个 X" | (init) | Run `bash scripts/init.sh "<name>"`, then load `01-researcher.md` |
-| **"下一步" / "继续" / "next" / "continue"** | **(auto)** | **读 manifest.json 判断下一个 pending 角色，就地执行（见下方「自动推进规则」）** |
-| "Research / find competitors / user pain points" | 01 | Load `01-researcher.md`, follow PART 1 + PART 3 |
-| "Write PRD / 写需求文档" | 02 | Load `02-pm.md`, do PART 0 health check first |
-| "Design interaction / 流程 / 状态机" | 03 | Load `03-interaction.md`, do PART 0 |
-| "Visual styles / explore styles / 风格方案" | 04 stage 1 | Load `04-prototype-visual.md`, scenario A1, output 3 STATIC HTML |
-| "Hi-fi prototype / 高保真" | 04 stage 2 | Load `04-prototype-visual.md`, scenario A2, output single-file interactive HTML |
-| "Frontend package / 工程包 / 前端包" | 04 stage 3 | Load `04-prototype-visual.md`, scenario A3, output `frontend/` directory. **REQUIRES**: stage 2 done + 05 review passed |
-| "Review / 评审" | 05 | Load `05-reviewer.md`, wear 4 hats |
-| "UAT checklist / 走查清单" | 06 stage 1 | Load `06-uat-walker.md`, scenario A1 |
-| "UAT report / 走查报告" | 06 stage 2 | Load `06-uat-walker.md`, scenario A2 |
-| "Launch ops / 推广 / 营销 / 上线文案 / 发布" | 07 (optional) | Load `07-launch-ops.md`, only when user explicitly requests OR 05 soft-prompted and user agrees |
-| **"技术架构 / 后端设计 / API 设计 / 数据模型 / tech arch"** | **08 (optional)** | **Load `08-tech-architect.md`, requires 02+03 done** |
-| **"对齐 / 共识 / brief / align / 锁定共识书 / 修订共识"** | **(align)** | **Load `.claude/commands/dw-align.md`. 共识书是所有下游角色的对齐锚点（v4.9 强制）** |
-| "What's the status / 进度" | (status) | Read `workspace/.current-project` and the project's `manifest.json` |
+| "Start new project" / "我要做一个 X" / "我想做 X" / "帮我做 X" / "我有个想法" | (init) | Run `bash scripts/init.sh "<name>"`, then load `01-researcher.md` |
+| **"下一步" / "继续" / "next" / "continue" / "推进" / "接着做"** | **(auto)** | **读 manifest.json 判断下一个 pending 角色，就地执行（见下方「自动推进规则」）** |
+| "Research / find competitors / user pain points" / "帮我分析" / "看看这个需求" / "需求靠不靠谱" / "竞品" / "用户痛点" | 01 | Load `01-researcher.md`, follow PART 1 + PART 3 |
+| "Write PRD / 写需求文档" / "帮我写 PRD" / "整理需求" / "功能清单" | 02 | Load `02-pm.md`, do PART 0 health check first |
+| "Design interaction / 流程 / 状态机" / "交互设计" / "画流程" | 03 | Load `03-interaction.md`, do PART 0 |
+| "Visual styles / explore styles / 风格方案" / "视觉风格" / "设计风格" | 04 stage 1 | Load `04-prototype-visual.md`, scenario A1, output 3 STATIC HTML |
+| "Hi-fi prototype / 高保真" / "做原型" / "出原型" | 04 stage 2 | Load `04-prototype-visual.md`, scenario A2, output single-file interactive HTML |
+| "Frontend package / 工程包 / 前端包" / "写代码" / "出代码" | 04 stage 3 | Load `04-prototype-visual.md`, scenario A3. **REQUIRES**: stage 2 done + 05 review passed |
+| "Review / 评审" / "帮我看看" / "检查一下" / "有没有问题" | 05 | Load `05-reviewer.md`, wear 5 hats |
+| "UAT checklist / 走查清单" / "上线检查" / "测试清单" | 06 stage 1 | Load `06-uat-walker.md`, scenario A1 |
+| "UAT report / 走查报告" / "整理走查结果" | 06 stage 2 | Load `06-uat-walker.md`, scenario A2 |
+| "Launch ops / 推广 / 营销 / 上线文案 / 发布" / "怎么推广" / "写发布文案" | 07 (optional) | Load `07-launch-ops.md`, only when user explicitly requests OR 05 soft-prompted and user agrees |
+| "技术架构 / 后端设计 / API 设计 / 数据模型 / tech arch" / "怎么实现" / "数据库怎么设计" | 08 (optional) | Load `08-tech-architect.md`, requires 02+03 done |
+| "对齐 / 共识 / brief / align / 锁定共识书 / 修订共识" | (align) | Load `.claude/commands/dw-align.md` |
+| "What's the status / 进度" / "做到哪了" / "现在哪一步" / "继续上次" | (status) | Read `workspace/.current-project` and the project's `manifest.json` |
+| "介绍一下" / "这是什么" / "怎么用" / "帮助" / "help" | (onboarding) | 输出首次使用引导内容 |
 | "Evolve / merge patches / 进化" | (evolve) | Load `.claude/commands/dw-evolve.md`, follow steps |
 
 ---
