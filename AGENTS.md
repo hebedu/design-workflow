@@ -41,6 +41,7 @@
 🔄 "继续上次的项目" / "继续"
 📊 "现在做到哪一步了？"
 👀 "看下"（不指定角色 = 触发全员评审）
+➕ "再加个 X 功能" / "改一下 X" / "修复 X"（触发变更轮，只跑必要的角色）
 ❓ "给我讲讲这套流程怎么用"
 
 **不需要记命令，想到什么说什么。**
@@ -115,6 +116,15 @@ design-workflow/
 - 有角色名 → 调用该角色（"交互看下" → 03）
 - **无角色名 → 调用 05 评审员，5 顶帽子全开（全员一起看）**
 
+**"再加 / 增加 / 修改 / 改一下 / 修复 / 方向错了" 的处理**：
+- 在已有产出基础上提出新需求 → **调用 `/dw-change` 变更轮**
+- 不直接进入某个角色，先做分诊和影响分析
+- 关键词识别：
+  - "加 / 增加 / 再来个" → A 类增量
+  - "改 / 修改 / 调整" → B 类修改
+  - "修复 / 走查发现 / 用户反馈" → C 类修复
+  - "方向错 / 推倒 / 重来 / 不做 X 改做 Y" → D 类重启
+
 **"骨架" / "快速" / "先跑通"**：
 - 在任何角色触发词前加这些词 → 用场景 S 骨架模式执行
 - 例："骨架版研究" → 01 场景 S
@@ -147,6 +157,7 @@ When the user says something, map to a role:
 | "UAT report / 走查报告" / "整理走查结果" | 06 stage 2 | Load `06-uat-walker.md`, scenario A2 |
 | "Launch ops / 推广 / 营销 / 上线文案 / 发布" / "怎么推广" / "写发布文案" | 07 (optional) | Load `07-launch-ops.md`, only when user explicitly requests OR 05 soft-prompted and user agrees |
 | "技术架构 / 后端设计 / API 设计 / 数据模型 / tech arch" / "怎么实现" / "数据库怎么设计" | 08 (optional) | Load `08-tech-architect.md`, requires 02+03 done |
+| **"再加个 X / 增加 X 功能 / 把 X 改成 Y / 修复 X / 走查发现 X / 方向错了 / 推倒重来"** | **(change)** | **Load `.claude/commands/dw-change.md`, do triage + impact analysis + recommend partial loop** |
 | "对齐 / 共识 / brief / align / 锁定共识书 / 修订共识" | (align) | Load `.claude/commands/dw-align.md` |
 | "What's the status / 进度" / "做到哪了" / "现在哪一步" / "继续上次" | (status) | Read `workspace/.current-project` and the project's `manifest.json` |
 | "介绍一下" / "这是什么" / "怎么用" / "帮助" / "help" | (onboarding) | 输出首次使用引导内容 |
