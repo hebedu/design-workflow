@@ -199,6 +199,8 @@ design-workflow/
 | "开始一个新项目 / 我要做..." | 运行 `/dw-init`，然后 `/dw-research` |
 | "我已经有 PRD 了" | 直接 `/dw-ux`，让用户提供 PRD |
 | "我已经有 HTML 了，想美化" | 直接 `/dw-hifi`，使用场景 C |
+| **"帮我看下这个页面的体验 / 从用户角度审查下 / UX 审计"** | **`/dw-review` 场景 D（独立 UX 审计）** |
+| **"[丢了一个 URL 或 HTML] + 看下 / 有什么体验问题"** | **`/dw-review` 场景 D** |
 | "看下进度 / 现在做到哪了" | `/dw-status` |
 | "评审一下" | `/dw-review` |
 | "上线了，要走查" | `/dw-uat-list` |

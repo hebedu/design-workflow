@@ -153,6 +153,7 @@ When the user says something, map to a role:
 | "Hi-fi prototype / 高保真" / "做原型" / "出原型" | 04 stage 2 | Load `04-prototype-visual.md`, scenario A2, output single-file interactive HTML |
 | "Frontend package / 工程包 / 前端包" / "写代码" / "出代码" | 04 stage 3 | Load `04-prototype-visual.md`, scenario A3. **REQUIRES**: stage 2 done + 05 review passed |
 | "Review / 评审" / "帮我看看" / "检查一下" / "有没有问题" | 05 | Load `05-reviewer.md`, wear 5 hats |
+| **"帮我看下这个页面的体验" / "从用户角度审查" / "UX 审计" / [丢 URL 或 HTML] + "看下体验"** | **05 scenario D** | **Load `05-reviewer.md`, scenario D (独立 UX 审计). No upstream docs needed — AI guides user through mini brief via conversation** |
 | "UAT checklist / 走查清单" / "上线检查" / "测试清单" | 06 stage 1 | Load `06-uat-walker.md`, scenario A1 |
 | "UAT report / 走查报告" / "整理走查结果" | 06 stage 2 | Load `06-uat-walker.md`, scenario A2 |
 | "Launch ops / 推广 / 营销 / 上线文案 / 发布" / "怎么推广" / "写发布文案" | 07 (optional) | Load `07-launch-ops.md`, only when user explicitly requests OR 05 soft-prompted and user agrees |
